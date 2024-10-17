@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Histogram Brightness</title>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.7/p5.js"></script>
+    <script type="text/javascript">
+      let img, histogram;
+
+      function preload() {
+        img = loadImage(
+          "https://raw.githubusercontent.com/scikit-image/scikit-image/master/skimage/data/astronaut.png"
+        );
+      }
+
+      function setup() {
+        createCanvas(256, 256);
+
+        // przekształcamy obraz na skalę szarości
+        img.resize(256, 256);
+        img.filter("gray");
+
+        img.loadPixels();
+
+        histogram = new Array(256).fill(0);
+
+        for (let i = 0; i < img.pixels.length; i += 4) {
+          let brightness = img.pixels[i];
+          histogram[brightness]++;
+        }
+
+        let maxValue = Math.max(...histogram);
+        background(255);
+        stroke(0);
+
+        for (let x = 0; x < 256; x++) {
+          let h = (histogram[x] / maxValue) * height;
+          line(x, height, x, height - h);
+        }
+      }
+    </script>
+  </head>
+  <body></body>
+</html>

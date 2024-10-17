@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.7/p5.js"></script>
+    <script type="text/javascript">
+      let img, img_h, img_s, img_v;
+
+      function preload() {
+        img = loadImage(
+          "https://raw.githubusercontent.com/scikit-image/scikit-image/master/skimage/data/astronaut.png"
+        );
+      }
+
+      function setup() {
+        createCanvas(512, 512);
+        img.resize(256, 256);
+
+        img_h = createImage(256, 256);
+        img_s = createImage(256, 256);
+        img_v = createImage(256, 256);
+
+        img.loadPixels();
+        img_h.loadPixels();
+        img_s.loadPixels();
+        img_v.loadPixels();
+
+        for (let i = 0; i < img.pixels.length; i += 4) {
+          let r = img.pixels[i] / 255;
+          let g = img.pixels[i + 1] / 255;
+          let b = img.pixels[i + 2] / 255;
+
+          // cmax i cmin
+          let cmax = Math.max(r, g, b);
+          let cmin = Math.min(r, g, b);
+
+          let v = cmax;
+
+          // współrzędne x i y
+          let x = (i / 4) % 256;
+          let y = Math.floor((i / 4) / 256);
+
+          // wartość jasności na img_v
+          img_v.set(x, y, color(255 * v));
+        }
+
+        img_v.updatePixels();
+
+        // wyświetlenie obrazów
+        image(img_h, 0, 0);
+        image(img_s, 256, 0);
+        image(img_v, 0, 256);
+        image(img, 256, 256);
+      }
+    </script>
+  </head>
+  <body></body>
+</html>
